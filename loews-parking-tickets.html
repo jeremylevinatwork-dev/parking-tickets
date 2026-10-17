@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en" data-build="park-20261017-1800">
+<head>
+<meta charset="UTF-8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Parking Tickets">
+<meta name="theme-color" content="#0a2540">
+<link rel="icon" href="data:,">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Loews Parking Tickets</title>
+<style>
+:root{
+  --navy:#0F2440; --navy2:#1E3A5F; --navy3:#0B1C33;
+  --gold:#C9A96A; --gold-deep:#A8823F; --gold-soft:#F5EDDA;
+  --bg:#F1F3F6; --card:#ffffff;
+  --ink:#1A2332; --muted:#66788D; --line:#DEE4EC;
+  --green:#1B7A43; --green-bg:#E3F2E9; --green-bd:#BFE3CC;
+  --amber:#96620A; --amber-bg:#FCF0D8; --amber-bd:#F0D9A8;
+  --red:#B3261E; --red-bg:#FBE7E5; --red-bd:#F0C4C1;
+  --blue:#1A5FB4; --blue-bg:#E4EDFA; --blue-bd:#C2D6F2;
+  --gray:#5F6B7A; --gray-bg:#EDF0F4; --gray-bd:#D5DBE3;
+  --purple:#6A3FB5; --purple-bg:#ECE5F9; --purple-bd:#D5C6F0;
+  --shadow-sm:0 1px 2px rgba(15,36,64,.06),0 1px 3px rgba(15,36,64,.05);
+  --shadow-md:0 6px 16px rgba(15,36,64,.10),0 2px 5px rgba(15,36,64,.06);
+  --radius:14px;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg); color:var(--ink); padding-bottom:92px;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;}
+header{background:linear-gradient(135deg,var(--navy3),var(--navy) 55%,var(--navy2)); color:#fff;
+  padding:18px 16px 14px; position:sticky; top:0; z-index:20;}
+header h1{margin:0; font-size:19px; letter-spacing:.3px;}
+header h1 .gold{color:var(--gold);}
+header p{margin:4px 0 0; font-size:12px; color:#b9c7d8;}
+header.branded{padding:0; background:
+  radial-gradient(120% 90% at 50% 0%, rgba(201,169,106,.14), transparent 55%),
+  linear-gradient(135deg,var(--navy3) 0%,var(--navy) 48%,var(--navy2) 100%);
+  border-bottom:3px solid var(--gold);}
+.logos{display:flex; align-items:center; justify-content:center; gap:14px; padding:18px 16px 12px;}
+.logos img{max-height:44px; width:auto; max-width:60%; object-fit:contain;
+  background:#fff; border-radius:10px; padding:7px 12px;
+  box-shadow:0 3px 10px rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.35);}
+.apptitle{background:transparent; color:#fff; padding:2px 16px 16px; text-align:center;}
+.apptitle h1{margin:0; font-size:21px; font-weight:800; letter-spacing:2.5px; text-transform:uppercase; color:#fff;}
+.apptitle p{margin:6px 0 0; font-size:12px; color:#A9BCD2; letter-spacing:.4px;}
+.apptitle::after{content:""; display:block; height:3px; width:60px; border-radius:2px;
+  background:linear-gradient(90deg,var(--gold-deep),var(--gold)); margin:11px auto 0;}
+#powerby{background:#f7f3e3;text-align:center;padding:7px 10px;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:bold;color:#000;font-size:18px;letter-spacing:.4px;border-bottom:2px solid #d4af37;}
+main{max-width:620px; margin:0 auto; padding:14px 12px;}
+section.tab{display:none;}
+section.tab.active{display:block; animation:tabIn .2s ease;}
+@keyframes tabIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:16px; margin-bottom:12px; box-shadow:var(--shadow-sm);}
+.card h3{margin:0 0 10px; font-size:15px; font-weight:800; color:var(--navy); letter-spacing:.2px;}
+.row{display:flex; gap:10px; flex-wrap:wrap;}
+.tile{flex:1 1 0; min-width:110px; background:var(--card); border:1px solid var(--line);
+  border-radius:var(--radius); padding:15px 10px 13px; text-align:center; box-shadow:var(--shadow-sm);
+  position:relative; overflow:hidden; transition:transform .15s ease, box-shadow .15s ease;}
+.tile::before{content:""; position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg,var(--navy),var(--navy2));}
+.tile .n{font-size:30px; font-weight:800; color:var(--navy); line-height:1.1;
+  font-variant-numeric:tabular-nums; letter-spacing:-.5px;}
+.tile .l{font-size:10.5px; font-weight:800; color:var(--muted); margin-top:5px;
+  text-transform:uppercase; letter-spacing:.8px;}
+.tile.warn::before{background:linear-gradient(90deg,var(--gold-deep),var(--gold));}
+.tile.warn .n{color:var(--amber);}
+.tile.bad::before{background:linear-gradient(90deg,#8E1F19,var(--red));}
+.tile.bad{background:#FFFDFB;}
+.tile.bad .n{color:var(--red);}
+.tkt{cursor:pointer; transition:transform .12s ease, box-shadow .12s ease;}
+.tkt:active{transform:scale(.99);}
+.tkt-top{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;}
+.tkt-plate{font-size:22px; font-weight:800; color:var(--navy); font-variant-numeric:tabular-nums; letter-spacing:1px;}
+.tkt-meta{font-size:13px; color:var(--muted); margin-top:6px; line-height:1.5;}
+.tkt.voided{opacity:.55;}
+.badge{display:inline-block; font-size:10.5px; font-weight:800; padding:4px 11px; border-radius:999px;
+  text-transform:uppercase; letter-spacing:.6px; white-space:nowrap; border:1px solid transparent;}
+.b-green{background:var(--green-bg); color:var(--green); border-color:var(--green-bd);}
+.b-amber{background:var(--amber-bg); color:var(--amber); border-color:var(--amber-bd);}
+.b-red{background:var(--red-bg); color:var(--red); border-color:var(--red-bd);}
+.b-purple{background:var(--purple-bg); color:var(--purple); border-color:var(--purple-bd);}
+.b-blue{background:var(--blue-bg); color:var(--blue); border-color:var(--blue-bd);}
+.b-gray{background:var(--gray-bg); color:var(--gray); border-color:var(--gray-bd);}
+.pchip{display:inline-block; font-size:11px; font-weight:800; background:var(--navy); color:#fff;
+  border-radius:6px; padding:3px 8px; letter-spacing:.5px; margin-right:6px;}
+.btn{display:inline-block; border:none; border-radius:12px; padding:14px 16px; font-size:15px;
+  font-weight:800; letter-spacing:.2px; cursor:pointer; text-align:center;
+  transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;}
+.btn:active{transform:scale(.985);}
+.btn-primary{background:linear-gradient(180deg,var(--navy2),var(--navy)); color:#fff; width:100%;
+  box-shadow:0 3px 10px rgba(15,36,64,.28);}
+.btn-primary:hover{filter:brightness(1.08);}
+.btn-gold{background:linear-gradient(180deg,var(--gold),var(--gold-deep)); color:#1c2733; width:100%;
+  box-shadow:0 3px 10px rgba(168,130,63,.30);}
+.btn-ghost{background:#fff; color:var(--navy); border:1.5px solid var(--navy); width:100%; margin-top:8px;}
+.btn-ghost:hover{background:#F4F7FB;}
+.btn-danger{background:#fff; color:var(--red); border:1.5px solid var(--red); width:100%; margin-top:8px;}
+.btn-danger:hover{background:#FDF3F2;}
+.btn-sm{width:auto; padding:10px 16px; font-size:14px;}
+.toolbar{display:flex; gap:8px; margin-bottom:12px;}
+.toolbar input{flex:1; border:1.5px solid var(--line); border-radius:10px; padding:11px 12px; font-size:15px;}
+select,input[type=text],input[type=date],input[type=datetime-local],textarea{
+  width:100%; border:1.5px solid var(--line); border-radius:10px; padding:11px 12px;
+  font-size:15px; margin:6px 0 12px; font-family:inherit; background:#fff; color:var(--ink);
+  transition:border-color .15s ease, box-shadow .15s ease;}
+select:focus,input[type=text]:focus,input[type=date]:focus,input[type=datetime-local]:focus,textarea:focus,
+input[type=password]:focus{outline:none; border-color:var(--navy); box-shadow:0 0 0 3px rgba(15,36,64,.13);}
+label{font-size:12px; font-weight:800; color:var(--navy); text-transform:uppercase; letter-spacing:.6px;}
+#bottomnav{position:fixed; left:0; right:0; bottom:0; background:rgba(255,255,255,.97);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  border-top:1px solid var(--line); box-shadow:0 -3px 14px rgba(15,36,64,.07);
+  display:flex; z-index:30; padding-bottom:env(safe-area-inset-bottom);}
+#bottomnav button{flex:1; border:none; background:none; padding:12px 0 10px; font-size:10.5px;
+  font-weight:800; letter-spacing:.4px; color:var(--muted); cursor:pointer; position:relative;
+  transition:color .15s ease;}
+#bottomnav button.active{color:var(--navy);}
+#bottomnav button.active::after{content:""; position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:34px; height:3px; border-radius:0 0 4px 4px;
+  background:linear-gradient(90deg,var(--gold-deep),var(--gold));}
+#bottomnav button .ico{display:block; font-size:19px; margin-bottom:3px;}
+#modal{position:fixed; inset:0; background:rgba(11,28,51,.6); -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
+  display:none; z-index:50; align-items:flex-end; justify-content:center;}
+#modal.open{display:flex; animation:modalIn .2s ease;}
+@keyframes modalIn{from{opacity:0;} to{opacity:1;}}
+#sheet{background:#fff; width:100%; max-width:620px; max-height:92vh; overflow-y:auto;
+  border-radius:20px 20px 0 0; padding:10px 18px 34px;
+  box-shadow:0 -10px 40px rgba(0,0,0,.25); animation:sheetUp .26s cubic-bezier(.2,.9,.3,1.05);}
+@keyframes sheetUp{from{transform:translateY(48px); opacity:.4;} to{transform:none; opacity:1;}}
+#sheet::before{content:""; display:block; width:46px; height:5px; border-radius:3px; background:var(--line); margin:0 auto 14px;}
+#sheet h2{margin:0 0 4px; font-size:19px; font-weight:800; color:var(--navy); letter-spacing:.2px;}
+#sheet .sub{font-size:13px; color:var(--muted); margin-bottom:12px;}
+.hist{border-left:3px solid var(--line); margin:10px 0 0 4px; padding-left:12px;}
+.hist div{font-size:13px; padding:5px 0; border-bottom:1px dashed var(--line);}
+.hist .t{color:var(--muted); font-size:11px;}
+.empty{text-align:center; color:var(--muted); padding:34px 16px; font-size:14px; line-height:1.7;}
+.empty .btn{margin-top:6px;}
+.kv{display:flex; justify-content:space-between; gap:14px; font-size:14px; padding:9px 0; border-bottom:1px solid var(--line);}
+.kv:last-child{border-bottom:none;}
+.kv b{color:var(--navy); font-weight:700; text-align:right;}
+.note{font-size:12px; color:var(--muted); line-height:1.5;}
+h2.sec{font-size:12.5px; font-weight:800; color:var(--navy); margin:20px 0 12px;
+  text-transform:uppercase; letter-spacing:1.4px;}
+h2.sec::after{content:""; display:block; width:36px; height:2.5px; border-radius:2px;
+  background:var(--gold); margin-top:6px;}
+.toast{position:fixed; left:50%; bottom:104px; transform:translateX(-50%);
+  background:linear-gradient(180deg,var(--navy2),var(--navy)); color:#fff;
+  padding:12px 20px; border-radius:999px; font-size:14px; font-weight:700; z-index:99; display:none;
+  max-width:90vw; text-align:center; border:1px solid rgba(201,169,106,.45);
+  box-shadow:0 10px 28px rgba(11,28,51,.35);}
+.req{color:var(--red); font-weight:800;}
+.photobtn{display:block; text-align:center; border-radius:14px; padding:18px 14px; font-size:17px;
+  font-weight:800; letter-spacing:.2px; cursor:pointer; color:#1c2733;
+  background:linear-gradient(180deg,var(--gold),var(--gold-deep));
+  box-shadow:0 3px 10px rgba(168,130,63,.30); margin-bottom:6px;}
+.photobtn:active{transform:scale(.985);}
+#nt-preview img{width:100%; border-radius:12px; border:1px solid var(--line); display:block;}
+.violrow{display:flex; align-items:center; gap:12px; padding:13px 12px; border:1.5px solid var(--line);
+  border-radius:12px; margin:8px 0; cursor:pointer; background:#fff;}
+.violrow input{width:24px; height:24px; flex:0 0 auto; margin:0; accent-color:var(--navy);}
+.violrow span{font-size:15px; font-weight:700; color:var(--ink); text-transform:none; letter-spacing:0;}
+.violrow.on{border-color:var(--navy); background:#F4F7FB;}
+.autoline{display:flex; align-items:center; gap:8px; background:var(--gold-soft); border:1px solid var(--amber-bd);
+  border-radius:10px; padding:10px 12px; font-size:14px; font-weight:700; color:var(--amber); margin:6px 0 12px;}
+@media (min-width:900px){
+  main{max-width:980px; padding:18px 16px;}
+  .cards2{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; align-items:start;}
+  .cards2 .card{margin-bottom:0;}
+  .tile{min-width:150px;}
+  #bottomnav{max-width:980px; margin-left:auto; margin-right:auto;}
+  .logos img{max-height:60px;}
+}
+
+.login-screen{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:200; padding:20px;
+  background:radial-gradient(120% 80% at 50% 20%, rgba(201,169,106,.16), transparent 55%),
+  linear-gradient(150deg,var(--navy3) 0%,var(--navy) 55%,var(--navy2) 100%);}
+.login-card{position:relative; background:#fff; border-radius:18px; padding:32px 26px 26px; width:100%; max-width:360px;
+  box-shadow:0 28px 70px rgba(0,0,0,.4); border-top:4px solid var(--gold);
+  animation:cardIn .35s cubic-bezier(.2,.9,.3,1.05);}
+@keyframes cardIn{from{transform:translateY(24px) scale(.97); opacity:0;} to{transform:none; opacity:1;}}
+.login-card h2{margin:0 0 6px; font-size:22px; font-weight:800; color:var(--navy); letter-spacing:1.5px; text-transform:uppercase;}
+.login-card h2::after{content:""; display:block; width:44px; height:3px; border-radius:2px;
+  background:linear-gradient(90deg,var(--gold-deep),var(--gold)); margin-top:8px;}
+.login-card .note{margin:10px 0 14px;}
+.login-card .btn{margin-top:8px;}
+
+/* ---------- print reports ---------- */
+#print-area{display:none;}
+@media print{
+  @page{margin:0.6in;}
+  html,body{background:#fff !important;}
+  body{font-family:Georgia,'Times New Roman',serif; color:#000;}
+  body>*:not(#print-area){display:none !important;}
+  #print-area{display:block !important; color:#000;}
+  .pr-head{border-bottom:2.5px solid #000; padding-bottom:10px; margin-bottom:14px;}
+  .pr-title{font-size:17pt; font-weight:800; letter-spacing:1.5px;}
+  .pr-sub{font-size:13pt; font-weight:700; margin-top:3px;}
+  .pr-meta{font-size:9pt; color:#333; margin-top:5px;}
+  .pr-sec{font-size:12pt; font-weight:800; margin:16px 0 6px; border-bottom:1px solid #666; padding-bottom:3px;}
+  .pr-table{width:100%; border-collapse:collapse; margin:6px 0 10px; font-size:9.5pt;}
+  .pr-table th{background:#e8e8e8 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    text-align:left; padding:6px 8px; border:1px solid #666; font-weight:800;}
+  .pr-table td{padding:6px 8px; border:1px solid #666; vertical-align:top;}
+  .pr-table thead{display:table-header-group;}
+  .pr-table tr{page-break-inside:avoid;}
+  .pr-kv{display:flex; justify-content:space-between; gap:12px; padding:5px 0; border-bottom:1px dotted #999; font-size:10.5pt; page-break-inside:avoid;}
+  .pr-kv span{color:#333;}
+  .pr-head,.pr-sec{page-break-after:avoid;}
+}
+</style>
+</head>
+<body>
+<header class="branded">
+  <div class="logos">
+    <img src="loews-logo.jpg" alt="Loews Hotels">
+  </div>
+  <div class="apptitle">
+    <h1>Parking Tickets</h1>
+    <p>Parking violations &mdash; Lakewood Regional Office &middot; Security</p>
+  </div>
+</header>
+<div id="powerby">Power by: NDL systems tech</div>
+<main>
+  <section class="tab active" id="tab-tickets"></section>
+  <section class="tab" id="tab-new"></section>
+  <section class="tab" id="tab-dash"></section>
+  <section class="tab" id="tab-more"></section>
+</main>
+<nav id="bottomnav">
+  <button data-tab="tickets" class="active"><span class="ico">&#127915;</span>Tickets</button>
+  <button data-tab="new"><span class="ico">&#10133;</span>New Ticket</button>
+  <button data-tab="dash"><span class="ico">&#128202;</span>Dashboard</button>
+  <button data-tab="more"><span class="ico">&#9776;</span>More</button>
+</nav>
+<div id="modal"><div id="sheet"></div></div>
+<div id="login" class="login-screen" style="display:none">
+  <div class="login-card">
+    <h2>Parking Tickets</h2>
+    <p class="note">Team login &mdash; pick your name and enter your 4-digit PIN.</p>
+    <label>Team member</label><select id="login-user"></select>
+    <label>4-digit PIN</label><input type="password" id="login-pin" inputmode="numeric" maxlength="4" placeholder="&bull;&bull;&bull;&bull;" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn btn-primary" onclick="doLogin()">Log in</button>
+    <p class="note" id="login-err" style="color:var(--red)"></p>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+"use strict";
+/* ============ Loews Parking Tickets — Lakewood Regional Office ============ */
+const PROP_CODE = "LKWD";
+const PROP_NAME = "Lakewood Regional Office";
+const AREAS = ["Employee Parking Lot","Visitor Parking","Front Circle","Loading Dock","Rear Lot","Other"];
+const VIOLATIONS = ["Employee parking only","Stopped on yellow spot / curb","No parking permit","Fire lane","Handicap space without placard","Blocking driveway / dock","Overnight parking","Other"];
+const MAKES = ["Ford","Chevrolet","Toyota","Honda","Nissan","Jeep","Dodge","Ram","GMC","Hyundai","Kia","BMW","Mercedes-Benz","Tesla","Volkswagen","Other"];
+const COLORS = ["White","Black","Silver","Gray","Red","Blue","Brown","Green","Gold/Tan","Orange","Yellow","Other"];
+const LS_KEY = "loewsParkingTicketsV1";
+const DEFAULT_TEAM = [{name:"Jeremy Levin",pin:"1245"},{name:"Alexander Duff",pin:"0132"},{name:"Dominique Black",pin:"2195"},{name:"Sean Forester",pin:"3867"},{name:"Justin Messger",pin:"5132"}];
+
+let S = { tickets:[], seq:1, seqDay:"", team:DEFAULT_TEAM.slice(), session:null, logins:[] };
+let tab = "tickets", ticketSearch = "";
+let memOnly = false;
+
+function load(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){ const d = JSON.parse(raw); if(d && d.tickets){ S = d;
+      if(!Array.isArray(S.team)||!S.team.length) S.team = DEFAULT_TEAM.slice();
+      if(!Array.isArray(S.logins)) S.logins = [];
+      if(!S.seq) S.seq = 1;
+      if(!S.seqDay) S.seqDay = "";
+    } }
+  }catch(e){ memOnly = true; }
+}
+function sessionName(){ return (S.session&&S.session.name)||""; }
+function canAdmin(){ const n = sessionName(); return n==="Jeremy Levin" || n.indexOf("Justin")===0; }
+function logHist(t,e){ t.hist=t.hist||[]; t.hist.push({t:nowLocal(),e:e,by:sessionName()}); }
+function save(){
+  sbDirty = true;
+  S._ts = Date.now();
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); memOnly = false; }
+  catch(e){ memOnly = true; }
+  if(typeof sbSchedulePush === "function") sbSchedulePush();
+}
+/* === SUPABASE LIVE SYNC (parking-state) === */
+const SB_URL = 'https://qxqrwusaynfqadjfqswe.supabase.co';
+const SB_KEY = 'sb_publishable_2ba9yzEA89uqXHJ6v-_cQg_AmwwEfFF';
+const SB_APP = 'parking-tickets';
+const SB_ROW_ID = 'parking-state';
+let sbSyncTimer = null;
+var sbDirty = false; // true after a local save until its cloud push succeeds
+function sbBadge(online, syncing){
+  var el = document.getElementById('sb-sync-badge');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'sb-sync-badge';
+    el.style.cssText = 'position:fixed;bottom:10px;right:10px;z-index:9999;font-size:13px;font-weight:600;padding:4px 10px;border-radius:20px;background:rgba(0,0,0,0.65);color:#fff;pointer-events:none;font-family:system-ui,sans-serif;';
+    document.body.appendChild(el);
+  }
+  el.textContent = syncing ? '\u27F3 Syncing\u2026' : (online ? '\u25CF Live sync' : '\u25CB Offline');
+  el.style.color = syncing ? '#fbbf24' : (online ? '#4ade80' : '#f87171');
+}
+function tktCount(d){ d = d || {}; return (d.tickets ? d.tickets.length : 0); }
+function normState(){
+  if(!Array.isArray(S.tickets)) S.tickets = [];
+  if(!Array.isArray(S.team) || !S.team.length) S.team = DEFAULT_TEAM.slice();
+  if(!Array.isArray(S.logins)) S.logins = [];
+  if(!S.seq) S.seq = 1;
+  if(!S.seqDay) S.seqDay = "";
+}
+async function sbPush(){
+  sbBadge(true, true);
+  if(!S._ts){ S._ts = Date.now(); try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){} }
+  try{
+    /* Merge-guard: never let a stale copy shrink the shared list. */
+    try{
+      var chk = await fetch(SB_URL + '/rest/v1/app_records?id=eq.' + encodeURIComponent(SB_ROW_ID) + '&select=data', { headers: {'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY} });
+      if(chk.ok){
+        var crows = await chk.json();
+        if(crows && crows.length){
+          var cloudTkts = (crows[0].data && crows[0].data.tickets) || [];
+          if(cloudTkts.length > S.tickets.length + 5){
+            var have = {}; S.tickets.forEach(function(x){ have[x.uid] = 1; });
+            cloudTkts.forEach(function(x){ if(!have[x.uid]) S.tickets.push(x); });
+            try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){}
+          }
+        }
+      }
+    }catch(e){}
+    var payload = JSON.parse(JSON.stringify(S));
+    if('session' in payload) payload.session = null;
+    var res = await fetch(SB_URL + '/rest/v1/app_records', {
+      method: 'POST',
+      headers: {'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates'},
+      body: JSON.stringify({id: SB_ROW_ID, app: SB_APP, data: payload})
+    });
+    if(res.ok){ sbDirty = false; sbBadge(true, false); } else sbBadge(false, false);
+  }catch(e){ sbBadge(false, false); }
+}
+async function sbPull(){
+  try{
+    var res = await fetch(SB_URL + '/rest/v1/app_records?id=eq.' + encodeURIComponent(SB_ROW_ID) + '&select=data', {
+      headers: {'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY}
+    });
+    if(!res.ok) return;
+    var rows = await res.json();
+    if(!rows || !rows.length){ if(tktCount(S) > 0) sbPush(); return; }
+    var cloud = rows[0].data || {};
+    if(sbDirty){ sbPush(); return; }
+    var cloudTs = cloud._ts || 0, localTs = S._ts || 0;
+    var takeCloud = function(){
+      var keepSession = S.session;
+      S = cloud;
+      normState();
+      S.session = keepSession;
+      try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){}
+      /* Never wipe a half-filled New Ticket form on a background pull. */
+      if(!(tab === "new" && newFormHasContent()) && typeof render === 'function'){ try{ render(); }catch(e){} }
+      sbBadge(true, false);
+    };
+    if(cloudTs === 0 && localTs === 0){
+      if(tktCount(S) >= tktCount(cloud)){
+        if(tktCount(S) > 0 || tktCount(cloud) > 0) sbPush(); else sbBadge(true, false);
+        return;
+      }
+      takeCloud(); sbPush(); return;
+    }
+    if(cloudTs > localTs){
+      if(tktCount(cloud) === 0 && tktCount(S) > 0){ sbPush(); return; }
+      if(localTs === 0 && tktCount(S) > tktCount(cloud)){ sbPush(); return; }
+      takeCloud(); return;
+    }
+    if(localTs > cloudTs){ sbPush(); return; }
+    sbBadge(true, false);
+  }catch(e){}
+}
+function sbSchedulePush(){
+  if(sbSyncTimer) clearTimeout(sbSyncTimer);
+  sbSyncTimer = setTimeout(sbPush, 2000);
+}
+setTimeout(sbPull, 2000);
+setInterval(sbPull, 30000);
+document.addEventListener('visibilitychange', function(){ if(!document.hidden) sbPull(); });
+/* === END SUPABASE LIVE SYNC === */
+
+function uid(p){ return p + "-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,8); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function nowLocal(){ const d=new Date(); const p=n=>String(n).padStart(2,"0");
+  return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+"T"+p(d.getHours())+":"+p(d.getMinutes()); }
+function fmtDT(s){ if(!s) return "—"; const d=new Date(s); return isNaN(d)?esc(s):d.toLocaleString(); }
+function fmtD(s){ if(!s) return "—"; const d=new Date(s+"T12:00:00"); return isNaN(d)?esc(s):d.toLocaleDateString(); }
+function dayStamp(){ const d=new Date(); const p=n=>String(n).padStart(2,"0");
+  return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate()); }
+function nextTicketNum(){
+  const d = dayStamp();
+  if(S.seqDay !== d){ S.seqDay = d; S.seq = 1; }
+  const n = S.seq++;
+  return "TKT-" + PROP_CODE + "-" + d + "-" + String(n).padStart(4,"0");
+}
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.style.display = "block";
+  clearTimeout(t._h); t._h = setTimeout(()=>{ t.style.display = "none"; }, 2600);
+}
+function vehicleLine(t){
+  return [t.color, t.make, t.model].filter(Boolean).join(" ") || "—";
+}
+function statusBadge(st){
+  const m = {"Issued":"b-amber","Void":"b-gray"};
+  return '<span class="badge '+(m[st]||"b-gray")+'">'+esc(st)+"</span>";
+}
+
+/* ---------- modal ---------- */
+const modal = document.getElementById("modal"), sheet = document.getElementById("sheet");
+function openSheet(html){ sheet.innerHTML = html; modal.classList.add("open"); sheet.scrollTop=0; }
+function closeSheet(){ modal.classList.remove("open"); }
+modal.addEventListener("click", e=>{ if(e.target===modal) closeSheet(); });
+window.closeSheet = closeSheet;
+
+/* ---------- tabs ---------- */
+document.getElementById("bottomnav").addEventListener("click", e=>{
+  const b = e.target.closest("button"); if(!b) return;
+  tab = b.dataset.tab;
+  document.querySelectorAll("#bottomnav button").forEach(x=>x.classList.toggle("active", x===b));
+  document.querySelectorAll("section.tab").forEach(s=>s.classList.remove("active"));
+  document.getElementById("tab-"+tab).classList.add("active");
+  render();
+});
+function showTab(name){
+  tab = name;
+  document.querySelectorAll("#bottomnav button").forEach(x=>x.classList.toggle("active", x.dataset.tab===name));
+  document.querySelectorAll("section.tab").forEach(s=>s.classList.remove("active"));
+  document.getElementById("tab-"+name).classList.add("active");
+  render();
+}
+
+/* ---------- tickets list ---------- */
+function renderTickets(){
+  const el = document.getElementById("tab-tickets");
+  let h = '<div class="toolbar"><input type="text" id="tktq" placeholder="Search by plate\u2026" value="'+esc(ticketSearch)+'">'
+    + '<button class="btn btn-ghost btn-sm" style="margin-top:0" onclick="printTicketList()">Print list</button>'
+    + '<button class="btn btn-ghost btn-sm" style="margin-top:0" onclick="emailTicketList()">Email list</button></div>'
+    + '<div id="ticket-list"></div>';
+  el.innerHTML = h;
+  const q = document.getElementById("tktq");
+  q.addEventListener("input", ()=>{ ticketSearch = q.value; renderTicketList();
+    const nq=document.getElementById("tktq"); nq.focus(); nq.setSelectionRange(nq.value.length,nq.value.length); });
+  renderTicketList();
+}
+function sortedTickets(){
+  return S.tickets.slice().sort((a,b)=>String(b.created).localeCompare(String(a.created)));
+}
+function renderTicketList(){
+  const box = document.getElementById("ticket-list"); if(!box) return;
+  const q = ticketSearch.trim().toUpperCase();
+  const list = sortedTickets().filter(t=>!q || String(t.plate||"").toUpperCase().indexOf(q)>=0);
+  if(!list.length){
+    box.innerHTML = '<div class="card"><div class="empty">No tickets here yet.<br><br><button class="btn btn-primary btn-sm" onclick="showTab(\'new\')">+ Write a ticket</button></div></div>';
+    return;
+  }
+  box.innerHTML = '<div class="cards2">' + list.map(t=>{
+    const v = (t.violations||[]);
+    const vline = v.length ? esc(v[0]) + (v.length>1 ? " +"+(v.length-1)+" more" : "") : "—";
+    return '<div class="card tkt'+(t.status==="Void"?' voided':'')+'" onclick="ticketDetail(\''+t.uid+'\')">'
+      + '<div class="tkt-top"><span class="tkt-plate">'+esc(t.plate||"—")+'</span>'+statusBadge(t.status)+'</div>'
+      + '<div class="tkt-meta"><span class="pchip">'+esc(t.area||"")+'</span> '+esc(t.num||"")+'<br>'
+      + esc(vehicleLine(t))+'<br>'+esc(vline)+'<br>'+fmtDT(t.created)+' &middot; by '+esc(t.issuedBy||"—")
+      + (t.photo ? '<br>\uD83D\uDCF7 Photo attached' : '')
+      + '</div></div>';
+  }).join("") + '</div>';
+}
+
+/* ---------- dashboard ---------- */
+function renderDash(){
+  const el = document.getElementById("tab-dash");
+  const live = S.tickets.filter(t=>t.status!=="Void");
+  const today = todayISO();
+  const weekAgo = new Date(Date.now() - 6*86400000).toISOString().slice(0,10);
+  const nToday = live.filter(t=>String(t.created||"").slice(0,10)===today).length;
+  const nWeek = live.filter(t=>String(t.created||"").slice(0,10)>=weekAgo).length;
+  const nVoid = S.tickets.filter(t=>t.status==="Void").length;
+  let h = '<div class="row">'
+    + '<div class="tile"><div class="n">'+S.tickets.length+'</div><div class="l">Total tickets</div></div>'
+    + '<div class="tile warn"><div class="n">'+nToday+'</div><div class="l">Today</div></div>'
+    + '</div><div class="row" style="margin-top:10px">'
+    + '<div class="tile"><div class="n">'+nWeek+'</div><div class="l">This week</div></div>'
+    + '<div class="tile"><div class="n">'+nVoid+'</div><div class="l">Voided</div></div>'
+    + '</div>';
+  h += '<div class="card" style="margin-top:12px"><h3>By violation</h3><p class="note">Issued tickets only (voided not counted).</p>';
+  const bv = VIOLATIONS.map(v=>[v, live.filter(t=>(t.violations||[]).indexOf(v)>=0).length]).filter(r=>r[1]>0);
+  h += bv.length ? bv.map(r=>'<div class="kv"><span>'+esc(r[0])+'</span><b>'+r[1]+'</b></div>').join("") : '<div class="empty">No tickets yet.</div>';
+  h += '</div>';
+  h += '<div class="card"><h3>By area</h3><p class="note">Issued tickets only (voided not counted).</p>';
+  const ba = AREAS.map(a=>[a, live.filter(t=>t.area===a).length]).filter(r=>r[1]>0);
+  h += ba.length ? ba.map(r=>'<div class="kv"><span>'+esc(r[0])+'</span><b>'+r[1]+'</b></div>').join("") : '<div class="empty">No tickets yet.</div>';
+  h += '</div>';
+  el.innerHTML = h;
+}
+
+/* ---------- new ticket form (photo first) ---------- */
+let pendingPhoto = "", pendingPhotoTs = "", newFormBuilt = false;
+function newFormHasContent(){
+  if(pendingPhoto) return true;
+  const p = document.getElementById("nt-plate"); if(p && p.value.trim()) return true;
+  const n = document.getElementById("nt-notes"); if(n && n.value.trim()) return true;
+  return VIOLATIONS.some(function(v,i){ const c=document.getElementById("nt-v"+i); return c && c.checked; });
+}
+function refreshAutoLine(){
+  const el = document.getElementById("nt-when");
+  if(el) el.textContent = new Date().toLocaleString();
+}
+function renderNew(){
+  if(newFormBuilt){ refreshAutoLine(); return; }
+  newFormBuilt = true;
+  const makeOpts = '<option value="">Pick a make\u2026</option>' + MAKES.map(m=>'<option>'+esc(m)+'</option>').join("");
+  const colorOpts = '<option value="">Pick a color\u2026</option>' + COLORS.map(c=>'<option>'+esc(c)+'</option>').join("");
+  const areaOpts = AREAS.map(a=>'<option>'+esc(a)+'</option>').join("");
+  const violRows = VIOLATIONS.map((v,i)=>'<label class="violrow"><input type="checkbox" id="nt-v'+i+'" onchange="violToggle(this)"><span>'+esc(v)+'</span></label>').join("");
+  document.getElementById("tab-new").innerHTML =
+    '<div class="card">'
+    + '<label class="photobtn" for="nt-photo">\uD83D\uDCF8 Take photo of the car / plate</label>'
+    + '<input type="file" id="nt-photo" accept="image/*" capture="environment" style="display:none" onchange="ticketPhotoPicked(this)">'
+    + '<div class="note" id="nt-ocr" style="min-height:16px"></div>'
+    + '<div id="nt-preview" style="display:none; margin:8px 0 4px"><img id="nt-preview-img" alt="Vehicle photo" style="width:100%; border-radius:12px; border:1px solid var(--line); display:block">'
+    + '<button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="removeTicketPhoto()">Remove photo</button></div>'
+    + '<div class="autoline">\uD83D\uDD52 Date/time: auto \u2014 <span id="nt-when"></span></div>'
+    + '<label>License plate <span class="req">*</span></label>'
+    + '<input type="text" id="nt-plate" placeholder="e.g. ABC1234" style="text-transform:uppercase" autocomplete="off" oninput="this.value=this.value.toUpperCase()">'
+    + '<label>Make</label><select id="nt-make">'+makeOpts+'</select>'
+    + '<label>Model</label><input type="text" id="nt-model" placeholder="e.g. F-150, Camry" autocomplete="off">'
+    + '<div class="row"><div style="flex:2"><label>Color</label><select id="nt-color">'+colorOpts+'</select></div>'
+    + '<div style="flex:1"><label>State</label><input type="text" id="nt-state" value="FL" maxlength="2" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div></div>'
+    + '<label>Where</label><select id="nt-area">'+areaOpts+'</select>'
+    + '<label>Violation <span class="req">*</span> \u2014 tap all that apply</label>'
+    + '<div id="nt-viols">'+violRows+'</div>'
+    + '<label>Notes</label><textarea id="nt-notes" rows="2" placeholder="Anything else worth noting"></textarea>'
+    + '<button class="btn btn-primary" style="font-size:17px; padding:16px; margin-top:6px" onclick="saveTicket()">Issue ticket</button>'
+    + '</div>';
+  refreshAutoLine();
+}
+window.violToggle = cb=>{ const r = cb.closest(".violrow"); if(r) r.classList.toggle("on", cb.checked); };
+function setPendingPhoto(dataUrl){
+  pendingPhoto = dataUrl;
+  pendingPhotoTs = nowLocal();
+  const pv = document.getElementById("nt-preview"), im = document.getElementById("nt-preview-img");
+  if(pv && im){ im.src = dataUrl; pv.style.display = "block"; }
+}
+window.removeTicketPhoto = ()=>{
+  pendingPhoto = ""; pendingPhotoTs = "";
+  const pv = document.getElementById("nt-preview"), im = document.getElementById("nt-preview-img");
+  if(pv) pv.style.display = "none"; if(im) im.src = "";
+  const st = document.getElementById("nt-ocr"); if(st) st.textContent = "";
+  const inp = document.getElementById("nt-photo"); if(inp) inp.value = "";
+};
+window.ticketPhotoPicked = input=>{
+  const f = input.files && input.files[0]; if(!f) return;
+  const rd = new FileReader();
+  rd.onload = ()=>{ processTicketPhoto(String(rd.result||"")); };
+  rd.onerror = ()=>{ toast("Couldn't read that photo"); };
+  try{ rd.readAsDataURL(f); }catch(e){ toast("Couldn't read that photo"); }
+};
+function processTicketPhoto(dataUrl){
+  let settled = false;
+  const finish = out=>{ if(settled) return; settled = true; setPendingPhoto(out); runPlateOCR(out); };
+  try{
+    const img = new Image();
+    img.onload = ()=>{
+      let out = dataUrl;
+      try{
+        const max = 1280;
+        const w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+        if(w && h && Math.max(w,h) > max){
+          const sc = max / Math.max(w,h);
+          const cv = document.createElement("canvas");
+          cv.width = Math.round(w*sc); cv.height = Math.round(h*sc);
+          const cx = cv.getContext("2d");
+          if(cx){ cx.drawImage(img,0,0,cv.width,cv.height); out = cv.toDataURL("image/jpeg", 0.82); }
+        }
+      }catch(e){}
+      finish(out);
+    };
+    img.onerror = ()=>finish(dataUrl);
+    img.src = dataUrl;
+    setTimeout(()=>finish(dataUrl), 2500); /* if the browser never fires load/error, keep the photo as-is */
+  }catch(e){ finish(dataUrl); }
+}
+/* ----- plate OCR (same Tesseract.js pattern as the Package app's label scan) ----- */
+function loadTesseract(cb){
+  if(window.Tesseract) return cb(null);
+  const cdns=[
+    "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js",
+    "https://unpkg.com/tesseract.js@5.1.1/dist/tesseract.min.js"
+  ];
+  let i=0;
+  const next=()=>{
+    if(i>=cdns.length) return cb(new Error("ocr-unavailable"));
+    const sc=document.createElement("script");
+    sc.src=cdns[i++];
+    sc.onload=()=>cb(null);
+    sc.onerror=()=>next();
+    document.head.appendChild(sc);
+  };
+  next();
+}
+function extractPlate(text){
+  const U = String(text||"").toUpperCase();
+  const raw = U.match(/[A-Z0-9]+(?:[ -][A-Z0-9]+)?/g) || [];
+  let best = "";
+  raw.forEach(tok=>{
+    const core = tok.replace(/[ -]/g,"");
+    if(core.length>=5 && core.length<=8 && /[A-Z]/.test(core) && /[0-9]/.test(core)){
+      if(core.length > best.length) best = core;
+    }
+  });
+  return best;
+}
+function runPlateOCR(dataUrl){
+  const st = document.getElementById("nt-ocr");
+  const setM = m=>{ if(st) st.textContent = m; };
+  setM("Reading plate\u2026");
+  loadTesseract(err=>{
+    if(err || !window.Tesseract){ setM("Photo attached. Couldn't start the plate reader \u2014 type the plate in."); return; }
+    try{
+      Tesseract.recognize(dataUrl,"eng",{logger:m=>{ if(m && m.status==="recognizing text") setM("Reading plate\u2026 "+Math.round((m.progress||0)*100)+"%"); }})
+      .then(r=>{
+        const plate = extractPlate((r && r.data && r.data.text) || "");
+        const field = document.getElementById("nt-plate");
+        if(plate){
+          if(field && !field.value.trim()){
+            field.value = plate;
+            setM("Plate read from photo \u2014 check it before saving.");
+            toast("Plate read from photo \u2014 check it");
+          } else {
+            setM("Photo attached. Plate reader saw "+plate+" \u2014 the field already has a plate, so it was left as-is.");
+          }
+        } else {
+          setM("Photo attached. Couldn't read a plate from it \u2014 type the plate in.");
+        }
+      })
+      .catch(()=>{ setM("Photo attached. Plate reading failed \u2014 type the plate in."); });
+    }catch(e){ setM("Photo attached. Plate reading failed \u2014 type the plate in."); }
+  });
+}
+window.saveTicket = ()=>{
+  const plate = (document.getElementById("nt-plate").value || "").trim().toUpperCase();
+  if(!plate){ toast("Enter the license plate first"); document.getElementById("nt-plate").focus(); return; }
+  const viols = VIOLATIONS.filter((v,i)=>{ const c = document.getElementById("nt-v"+i); return c && c.checked; });
+  if(!viols.length){ toast("Pick at least one violation"); return; }
+  const t = {
+    uid: uid("tkt"),
+    num: nextTicketNum(),
+    created: nowLocal(),
+    plate: plate,
+    make: document.getElementById("nt-make").value || "",
+    model: (document.getElementById("nt-model").value || "").trim(),
+    color: document.getElementById("nt-color").value || "",
+    state: (document.getElementById("nt-state").value || "FL").trim().toUpperCase() || "FL",
+    area: document.getElementById("nt-area").value || AREAS[0],
+    violations: viols,
+    notes: (document.getElementById("nt-notes").value || "").trim(),
+    issuedBy: sessionName(),
+    photo: pendingPhoto || "",
+    photoTs: pendingPhoto ? (pendingPhotoTs || nowLocal()) : "",
+    status: "Issued",
+    hist: []
+  };
+  logHist(t, "Issued");
+  S.tickets.push(t);
+  save();
+  resetNewForm();
+  showTab("tickets");
+  toast("Ticket " + t.num + " issued");
+  ticketDetail(t.uid);
+};
+function resetNewForm(){
+  ["nt-plate","nt-model","nt-notes"].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
+  const mk = document.getElementById("nt-make"); if(mk) mk.value = "";
+  const cl = document.getElementById("nt-color"); if(cl) cl.value = "";
+  const stt = document.getElementById("nt-state"); if(stt) stt.value = "FL";
+  const ar = document.getElementById("nt-area"); if(ar) ar.value = AREAS[0];
+  VIOLATIONS.forEach((v,i)=>{ const c=document.getElementById("nt-v"+i); if(c){ c.checked=false; const r=c.closest(".violrow"); if(r) r.classList.remove("on"); } });
+  removeTicketPhoto();
+  refreshAutoLine();
+}
+
+/* ---------- ticket detail / print sheet / email ---------- */
+function findTicket(u){ return S.tickets.find(t=>t.uid===u); }
+window.ticketDetail = u=>{
+  const t = findTicket(u); if(!t) return;
+  let h = '<h2>'+esc(t.plate||"—")+' <span style="font-size:13px; color:var(--muted)">'+esc(t.state||"")+'</span></h2>'
+    + '<div class="sub">'+esc(t.num||"")+' &middot; '+statusBadge(t.status)+'</div>';
+  if(t.photo) h += '<img src="'+t.photo+'" alt="Vehicle photo" style="width:100%; border-radius:12px; border:1px solid var(--line); margin-bottom:10px">';
+  h += '<div class="kv"><span>Ticket #</span><b>'+esc(t.num||"")+'</b></div>'
+    + '<div class="kv"><span>Date / time</span><b>'+fmtDT(t.created)+'</b></div>'
+    + '<div class="kv"><span>Plate</span><b>'+esc(t.plate||"—")+' ('+esc(t.state||"") +')</b></div>'
+    + '<div class="kv"><span>Vehicle</span><b>'+esc(vehicleLine(t))+'</b></div>'
+    + '<div class="kv"><span>Location</span><b>'+esc(t.area||"")+' \u2014 '+esc(PROP_NAME)+'</b></div>'
+    + '<div class="kv"><span>Issued by</span><b>'+esc(t.issuedBy||"—")+'</b></div>'
+    + '<div class="kv"><span>Status</span><b>'+esc(t.status)+'</b></div>';
+  h += '<h2 class="sec">Violations</h2>'
+    + (t.violations||[]).map(v=>'<div style="font-size:15px; padding:4px 0">\u2611 '+esc(v)+'</div>').join("");
+  if(t.notes) h += '<h2 class="sec">Notes</h2><p style="font-size:14px; line-height:1.5">'+esc(t.notes)+'</p>';
+  if(t.photo && t.photoTs) h += '<p class="note">Photo taken '+fmtDT(t.photoTs)+'.</p>';
+  h += '<div class="hist">' + (t.hist||[]).map(e=>'<div>'+esc(e.e)+'<div class="t">'+fmtDT(e.t)+(e.by?' &middot; '+esc(e.by):'')+'</div></div>').join("") + '</div>';
+  h += '<button class="btn btn-gold" style="margin-top:14px" onclick="printTicket(\''+t.uid+'\')">\uD83D\uDDA8 Print ticket</button>'
+    + '<button class="btn btn-ghost" onclick="emailTicket(\''+t.uid+'\')">\u2709 Email ticket</button>';
+  if(t.status==="Issued" && canAdmin())
+    h += '<button class="btn btn-danger" onclick="voidTicket(\''+t.uid+'\')">Void this ticket</button>';
+  h += '<button class="btn btn-ghost" onclick="closeSheet()">Close</button>';
+  openSheet(h);
+};
+function ticketSheetHtml(t){
+  const viols = (t.violations||[]).map(v=>'<div style="font-size:15px; padding:3px 0">\u2611 '+esc(v)+'</div>').join("");
+  return '<div style="border:3px solid #000; border-radius:10px; overflow:hidden; background:#fff; color:#000">'
+    + '<div style="background:#FFD21F; color:#000; text-align:center; padding:16px 10px 12px; border-bottom:3px solid #000">'
+    + '<div style="font-size:26px; font-weight:900; letter-spacing:2.5px">PARKING VIOLATION</div>'
+    + '<div style="font-size:12.5px; font-weight:700; margin-top:4px">Loews Hotels Security \u2014 Lakewood Regional Office</div></div>'
+    + '<div style="padding:14px 16px">'
+    + '<div style="display:flex; justify-content:space-between; gap:10px; font-size:14px"><span>Ticket #</span><b>'+esc(t.num||"")+'</b></div>'
+    + '<div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; margin-top:4px"><span>Date / time</span><b>'+fmtDT(t.created)+'</b></div>'
+    + '<div style="text-align:center; margin:14px 0 4px"><div style="font-size:12px; font-weight:700; letter-spacing:1.5px">LICENSE PLATE</div>'
+    + '<div style="font-size:40px; font-weight:900; letter-spacing:3px; line-height:1.1">'+esc(t.plate||"—")+' <span style="font-size:18px">'+esc(t.state||"")+'</span></div></div>'
+    + '<div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; border-top:1px solid #ccc; padding-top:8px"><span>Vehicle</span><b>'+esc(vehicleLine(t))+'</b></div>'
+    + '<div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; margin-top:4px"><span>Location</span><b>'+esc(t.area||"")+'</b></div>'
+    + '<div style="font-size:12px; font-weight:700; letter-spacing:1.5px; margin:12px 0 2px">VIOLATION(S)</div>'
+    + viols
+    + (t.notes ? '<div style="font-size:12px; font-weight:700; letter-spacing:1.5px; margin:12px 0 2px">NOTES</div><div style="font-size:14px">'+esc(t.notes)+'</div>' : '')
+    + '<div style="display:flex; justify-content:space-between; gap:10px; font-size:14px; margin-top:12px; border-top:1px solid #ccc; padding-top:8px"><span>Issued by</span><b>'+esc(t.issuedBy||"—")+'</b></div>'
+    + (t.status==="Void" ? '<div style="text-align:center; font-size:20px; font-weight:900; color:#B3261E; letter-spacing:3px; margin-top:10px">VOID</div>' : '')
+    + '<div style="font-size:13.5px; font-weight:700; text-align:center; margin-top:14px; border-top:2px solid #000; padding-top:10px">This is a warning notice from Loews Hotels Security \u2014 Lakewood Regional Office.</div>'
+    + '</div></div>';
+}
+window.printTicket = u=>{
+  const t = findTicket(u); if(!t) return;
+  openSheet(ticketSheetHtml(t)
+    + '<button class="btn btn-gold" style="margin-top:14px" onclick="emailTicket(\''+t.uid+'\')">\u2709 Email ticket</button>'
+    + '<button class="btn btn-ghost" onclick="downloadTicket(\''+t.uid+'\')">Download ticket (print from Files)</button>'
+    + '<button class="btn btn-ghost" onclick="ticketDetail(\''+t.uid+'\')">Back</button>'
+    + '<button class="btn btn-ghost" onclick="closeSheet()">Close</button>');
+};
+window.downloadTicket = u=>{
+  const t = findTicket(u); if(!t) return;
+  const ok = downloadReport("parking-ticket-"+(t.num||"ticket")+".html",
+    standaloneReport("Parking Ticket " + (t.num||""), ticketSheetHtml(t)));
+  toast(ok ? "Ticket saved to Files \u2014 open it there, then Share \u2192 Print" : "Couldn't save the ticket.");
+};
+function ticketText(t){
+  return "PARKING VIOLATION \u2014 Loews Hotels Security, Lakewood Regional Office\n"
+    + "Ticket: " + (t.num||"") + "\n"
+    + "Date/time: " + fmtDT(t.created) + "\n"
+    + "Plate: " + (t.plate||"") + " (" + (t.state||"") + ")\n"
+    + "Vehicle: " + vehicleLine(t) + "\n"
+    + "Location: " + (t.area||"") + " \u2014 Lakewood Regional Office\n"
+    + "Violation(s):\n" + (t.violations||[]).map(v=>" - "+v).join("\n") + "\n"
+    + (t.notes ? "Notes: " + t.notes + "\n" : "")
+    + "Issued by: " + (t.issuedBy||"") + "\n"
+    + "Status: " + t.status + "\n\n"
+    + "This is a warning notice from Loews Hotels Security \u2014 Lakewood Regional Office.";
+}
+window.emailTicket = u=>{
+  const t = findTicket(u); if(!t) return;
+  const href = "mailto:?subject=" + encodeURIComponent("Parking Ticket " + (t.num||"") + " \u2014 " + (t.plate||""))
+    + "&body=" + encodeURIComponent(ticketText(t));
+  window.location.href = href;
+};
+window.voidTicket = u=>{
+  if(!canAdmin()){ toast("Only Jeremy or Justin can void a ticket"); return; }
+  const t = findTicket(u); if(!t) return;
+  if(!confirm("Void ticket " + (t.num||"") + " (" + (t.plate||"") + ")? It stays on the list, marked VOID.")) return;
+  t.status = "Void";
+  logHist(t, "Voided");
+  save(); closeSheet(); render();
+  toast("Ticket voided");
+};
+
+/* ---------- list report (print / email) ---------- */
+function listSummaryLines(){
+  const live = S.tickets.filter(t=>t.status!=="Void");
+  const lines = [];
+  lines.push("Total tickets: " + S.tickets.length + " (issued: " + live.length + ", void: " + (S.tickets.length-live.length) + ")");
+  VIOLATIONS.forEach(v=>{ const n = live.filter(t=>(t.violations||[]).indexOf(v)>=0).length; if(n) lines.push("  " + v + ": " + n); });
+  AREAS.forEach(a=>{ const n = live.filter(t=>t.area===a).length; if(n) lines.push("  " + a + ": " + n); });
+  return lines;
+}
+window.printTicketList = ()=>{
+  const list = sortedTickets();
+  let body = '<div class="pr-sec">Summary</div>'
+    + listSummaryLines().map(l=>'<div class="pr-kv"><span>'+esc(l.split(": ")[0])+'</span><b>'+esc(l.split(": ").slice(1).join(": "))+'</b></div>').join("");
+  body += '<div class="pr-sec">Tickets</div>';
+  const rows = list.map(t=>['<b>'+esc(t.num||"")+'</b>', fmtDT(t.created), '<b>'+esc(t.plate||"")+'</b>',
+    esc(vehicleLine(t)), esc(t.area||""), esc((t.violations||[]).join("; ")), esc(t.status), esc(t.issuedBy||"—")]);
+  body += list.length ? prTable(["Ticket #","Date / Time","Plate","Vehicle","Area","Violations","Status","Issued By"], rows)
+    : '<p>No tickets yet.</p>';
+  if(/iPad|iPhone|iPod/.test(navigator.userAgent||"")){
+    const ok = downloadReport("parking-tickets-"+todayISO()+".html", standaloneReport("Parking Tickets", prHead("Parking Tickets \u2014 Lakewood Regional Office")+body));
+    toast(ok ? "Report saved to Files \u2014 open it there, then Share \u2192 Print" : "Couldn't save the report.");
+    return;
+  }
+  doPrint("Parking Tickets \u2014 Lakewood Regional Office", body);
+};
+window.emailTicketList = ()=>{
+  const list = sortedTickets();
+  let body = "Parking tickets \u2014 Lakewood Regional Office (LKWD)\n" + listSummaryLines().join("\n") + "\n";
+  list.forEach(t=>{
+    body += "\n" + (t.num||"") + " \u00B7 " + fmtDT(t.created) + " \u00B7 Plate " + (t.plate||"")
+      + " \u00B7 " + vehicleLine(t) + " \u00B7 " + (t.area||"") + " \u00B7 " + (t.violations||[]).join("; ")
+      + " \u00B7 " + t.status + " \u00B7 by " + (t.issuedBy||"");
+  });
+  const href = "mailto:?subject=" + encodeURIComponent("Parking Tickets \u2014 Lakewood \u2014 " + todayISO())
+    + "&body=" + encodeURIComponent(body);
+  window.location.href = href;
+};
+
+/* ---------- more: team, backup, data ---------- */
+function renderMore(){
+  let h = '<div class="card"><h3>Team logins</h3><p class="note">Each team member logs in with their name + 4-digit PIN.</p>';
+  S.team.forEach((t,i)=>{
+    h += '<div class="kv"><span>'+esc(t.name)+'</span><b>\u2022\u2022\u2022\u2022'+(canAdmin()?' <a href="#" onclick="delTeam('+i+');return false;" style="color:var(--red)">remove</a>':'')+'</b></div>';
+  });
+  if(canAdmin()){
+    h += '<label>Name</label><input type="text" id="tm-name" placeholder="Full name">'
+      + '<label>4-digit PIN</label><input type="text" id="tm-pin" inputmode="numeric" maxlength="4" placeholder="e.g. 2468">'
+      + '<button class="btn btn-primary" onclick="addTeam()">Add team member</button>';
+  }
+  h += '<button class="btn btn-ghost" onclick="logout()">Log out'+(S.session&&S.session.name?' ('+esc(S.session.name)+')':'')+'</button></div>';
+  h += '<div class="card"><h3>Login history</h3><p class="note">Every login, newest first.</p>';
+  const _lg = (S.logins||[]).slice().reverse().slice(0,25);
+  h += _lg.length ? _lg.map(e=>'<div class="kv"><span>'+esc(e.name)+'</span><b>'+fmtDT(e.t)+'</b></div>').join("") : '<div class="empty">No logins yet.</div>';
+  h += '</div>';
+  h += '<div class="card"><h3>Backup &amp; restore</h3><p class="note">Keep a copy of everything \u2014 the backup holds all tickets, team logins and settings. Import <b>replaces</b> everything here; Merge <b>combines</b> tickets from another copy (use it when moving data to a fresh link).</p>'
+    + '<button class="btn btn-ghost" onclick="exportBackup()">Export backup (JSON)</button>'
+    + '<button class="btn btn-ghost" onclick="document.getElementById(\'impjson\').click()">Import backup (JSON)</button>'
+    + '<input type="file" id="impjson" accept=".json,application/json" style="display:none" onchange="importBackup(this)">'
+    + '<button class="btn btn-ghost" onclick="document.getElementById(\'merjson\').click()">Merge backup (JSON)</button>'
+    + '<input type="file" id="merjson" accept=".json,application/json" style="display:none" onchange="mergeBackup(this)"></div>';
+  h += '<div class="card"><h3>Data</h3>'
+    + '<p class="note">Records save on this device automatically and sync live with the team.'+(memOnly?' <b>Note:</b> this browser is blocking local saves \u2014 exports still work.':'')+'</p>'
+    + '<button class="btn btn-ghost" onclick="printTicketList()">Print ticket list</button>'
+    + '<button class="btn btn-danger" onclick="resetAll()">Delete ALL data</button></div>';
+  h += '<div class="card"><h3>About</h3><p class="note">Loews Parking Tickets \u2014 digital parking violation tickets for the Lakewood Regional Office (LKWD), issued by Loews Hotels Security.<br><br>Power by: NDL systems tech</p></div>';
+  document.getElementById("tab-more").innerHTML = h;
+}
+function dl(name, text, mime){
+  const b = new Blob([text],{type:mime||"text/plain"}); const a = document.createElement("a");
+  a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+}
+window.exportBackup = ()=>{
+  dl("parking-tickets-backup-"+todayISO()+".json", JSON.stringify(S), "application/json");
+  toast("Backup downloaded");
+};
+window.importBackup = inp=>{
+  const f = inp.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{ try{
+    const d = JSON.parse(r.result);
+    if(!d || !Array.isArray(d.tickets)){ alert("That file doesn't look like a parking-tickets backup."); return; }
+    if(!confirm("Replace ALL current data with this backup?")) return;
+    if(!Array.isArray(d.team)||!d.team.length) d.team = DEFAULT_TEAM.slice();
+    if(!Array.isArray(d.logins)) d.logins = [];
+    if(!d.seq) d.seq = 1;
+    if(!d.seqDay) d.seqDay = "";
+    S = d; save(); render(); toast("Backup restored");
+  }catch(e){ alert("Could not read backup: "+e.message); } inp.value=""; };
+  r.readAsText(f);
+};
+window.mergeBackup = inp=>{
+  const f = inp.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{ try{
+    const d = JSON.parse(r.result);
+    if(!d || !Array.isArray(d.tickets)){ alert("That file doesn't look like a parking-tickets backup."); return; }
+    const lastAct = t=>{
+      let m = String(t.created||"");
+      (t.hist||[]).forEach(e=>{ const x = String(e.t||""); if(x>m) m = x; });
+      return m;
+    };
+    let added = 0, updated = 0;
+    (d.tickets||[]).forEach(bt=>{
+      const ex = S.tickets.find(t=>t.uid===bt.uid);
+      if(!ex){ S.tickets.push(bt); added++; return; }
+      const newer = lastAct(bt) >= lastAct(ex) ? bt : ex;
+      const older = newer===bt ? ex : bt;
+      const seen = {}, mh = [];
+      (newer.hist||[]).concat(older.hist||[]).forEach(e=>{
+        const k = String(e.t||"")+"|"+String(e.e||"")+"|"+String(e.by||"");
+        if(!seen[k]){ seen[k]=1; mh.push(e); }
+      });
+      S.tickets[S.tickets.indexOf(ex)] = Object.assign({}, older, newer, {hist:mh, uid:ex.uid});
+      updated++;
+    });
+    const lseen = {}; (S.logins||[]).forEach(e=>{ lseen[e.name+"|"+e.t]=1; });
+    (d.logins||[]).forEach(e=>{ const k = e.name+"|"+e.t; if(!lseen[k]){ lseen[k]=1; S.logins.push(e); } });
+    const tseen = {}; (S.team||[]).forEach(m=>{ tseen[String(m.name||"").toLowerCase()]=1; });
+    (d.team||[]).forEach(m=>{ const k = String(m.name||"").toLowerCase(); if(k && !tseen[k]){ tseen[k]=1; S.team.push(m); } });
+    if(d.seqDay && d.seqDay > (S.seqDay||"")){ S.seqDay = d.seqDay; S.seq = d.seq || S.seq; }
+    else if(d.seqDay === S.seqDay && (d.seq||0) > (S.seq||0)) S.seq = d.seq;
+    save(); render();
+    toast("Merged: "+added+" added, "+updated+" updated");
+  }catch(e){ alert("Could not read backup: "+e.message); } inp.value=""; };
+  r.readAsText(f);
+};
+window.resetAll = ()=>{
+  if(!confirm("Delete ALL parking tickets on this device?")) return;
+  S = {tickets:[], seq:1, seqDay:"", team:DEFAULT_TEAM.slice(), session:S.session, logins:S.logins||[]};
+  save(); render(); toast("All data deleted");
+};
+
+/* ---------- team login ---------- */
+function renderLoginUsers(){
+  document.getElementById("login-user").innerHTML = S.team.map(t=>'<option>'+esc(t.name)+'</option>').join("");
+}
+function gateLogin(){
+  const lg = document.getElementById("login");
+  if(S.session && S.session.name){ lg.style.display = "none"; }
+  else{ document.getElementById("login-pin").value = ""; document.getElementById("login-err").textContent = "";
+    renderLoginUsers(); lg.style.display = "flex"; }
+}
+window.doLogin = ()=>{
+  const name = document.getElementById("login-user").value;
+  const pin = document.getElementById("login-pin").value.trim();
+  if(!S.team.some(t=>t.name===name && t.pin===pin)){
+    document.getElementById("login-err").textContent = "Wrong PIN \u2014 try again."; return; }
+  S.session = {name:name};
+  S.logins = S.logins||[]; S.logins.push({name:name, t:nowLocal()});
+  if(S.logins.length>200) S.logins = S.logins.slice(-200);
+  save();
+  document.getElementById("login").style.display = "none";
+  render(); toast("Welcome, "+name);
+};
+window.logout = ()=>{ S.session = null; save(); gateLogin(); };
+window.addTeam = ()=>{
+  if(!canAdmin()){ toast("Only Jeremy or Justin can add team members"); return; }
+  const name = document.getElementById("tm-name").value.trim();
+  const pin = document.getElementById("tm-pin").value.trim();
+  if(!name){ toast("Enter a name"); return; }
+  if(!/^\d{4}$/.test(pin)){ toast("PIN must be 4 digits"); return; }
+  if(S.team.some(t=>t.name.toLowerCase()===name.toLowerCase())){ toast("That name is already added"); return; }
+  S.team.push({name:name, pin:pin}); save(); render(); toast(name+" added");
+};
+window.delTeam = i=>{
+  if(!canAdmin()){ toast("Only Jeremy or Justin can remove team members"); return; }
+  const t = S.team[i]; if(!t) return;
+  if(S.session && S.session.name===t.name){ toast("Can't remove the logged-in user"); return; }
+  S.team.splice(i,1); save(); render(); toast(t.name+" removed");
+};
+
+/* ---------- printing helpers ---------- */
+function prHead(title){
+  const when = new Date().toLocaleString();
+  const by = sessionName();
+  return '<div class="pr-head"><div class="pr-title">LOEWS PARKING TICKETS</div>'
+    + '<div class="pr-sub">'+esc(title)+'</div>'
+    + '<div class="pr-meta">Printed '+esc(when)+(by?' &middot; Prepared by '+esc(by):'')+' &middot; Lakewood Regional Office (LKWD)</div></div>';
+}
+function doPrint(title, body){
+  document.getElementById("print-area").innerHTML = prHead(title) + body;
+  window.print();
+}
+function standaloneReport(title, bodyHtml){
+  const css = "body{font-family:Georgia,'Times New Roman',serif;color:#000;margin:0.6in;}"
+    + ".pr-head{border-bottom:2.5px solid #000;padding-bottom:10px;margin-bottom:14px;}"
+    + ".pr-title{font-size:17pt;font-weight:800;letter-spacing:1.5px;}"
+    + ".pr-sub{font-size:13pt;font-weight:700;margin-top:3px;}"
+    + ".pr-meta{font-size:9pt;color:#333;margin-top:5px;}"
+    + ".pr-sec{font-size:12pt;font-weight:800;margin:16px 0 6px;border-bottom:1px solid #666;padding-bottom:3px;}"
+    + ".pr-table{width:100%;border-collapse:collapse;margin:6px 0 10px;font-size:9.5pt;}"
+    + ".pr-table th{background:#e8e8e8;text-align:left;padding:6px 8px;border:1px solid #666;font-weight:800;}"
+    + ".pr-table td{padding:6px 8px;border:1px solid #666;vertical-align:top;}"
+    + ".pr-table thead{display:table-header-group;}.pr-table tr{page-break-inside:avoid;}"
+    + ".pr-kv{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dotted #999;font-size:10.5pt;page-break-inside:avoid;}"
+    + "@media print{.pr-table th{background:#e8e8e8 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}}";
+  return "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
+    + "<title>"+esc(title)+" \u2014 Loews Parking Tickets</title><style>"+css+"</style></head><body>"
+    + bodyHtml + "</" + "body></html>";
+}
+function downloadReport(filename, html){
+  try{
+    const blob = new Blob([html],{type:"text/html"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{ try{ URL.revokeObjectURL(a.href); }catch(e){} a.remove(); }, 5000);
+    return true;
+  }catch(e){ return false; }
+}
+function prTable(heads, rows){
+  let h = '<table class="pr-table"><thead><tr>';
+  heads.forEach(x=>{ h += '<th>'+esc(x)+'</th>'; });
+  h += '</tr></thead><tbody>';
+  rows.forEach(r=>{ h += '<tr>'; r.forEach(c=>{ h += '<td>'+c+'</td>'; }); h += '</tr>'; });
+  return h + '</tbody></table>';
+}
+
+/* ---------- render all ---------- */
+function render(){
+  if(tab==="tickets") renderTickets();
+  else if(tab==="new") renderNew();
+  else if(tab==="dash") renderDash();
+  else renderMore();
+}
+load();
+if(!S.team || !S.team.length) S.team = DEFAULT_TEAM.slice();
+/* Portal SSO: one login for the whole suite */
+try{
+  if(!S.session && localStorage.getItem('loewsAuth')==='1'){
+    var pu = localStorage.getItem('loewsUser') || '';
+    if(pu){
+      var tm = (S.team || []).find(function(t){ return t.name === pu; })
+        || (S.team || []).find(function(t){ return pu.indexOf('Justin') === 0 && t.name.indexOf('Justin') === 0; });
+      S.session = { name: tm ? tm.name : pu };
+    }
+  }
+}catch(e){}
+render(); gateLogin();
+</script>
+<div id="print-area"></div>
+
+<script>
+try{
+var curB=document.documentElement.getAttribute('data-build');
+function buildCheck(){
+  if(!curB) return;
+  fetch(location.pathname+'?_cb='+Date.now(),{cache:'no-store'}).then(function(r){return r.text();}).then(function(t){
+    sessionStorage.setItem('pkb2',curB);
+    var m=t.match(/data-build="([^"]+)"/);
+    if(m && m[1]!==curB && sessionStorage.getItem('pkr2')!==m[1]){
+      var busy=false;
+      try{
+        var md=document.getElementById('modal'); if(md && md.classList.contains('open')) busy=true;
+        var ae=document.activeElement; if(ae && /INPUT|TEXTAREA|SELECT/.test(ae.tagName)) busy=true;
+      }catch(e){}
+      if(busy) return;
+      sessionStorage.setItem('pkr2',m[1]);
+      location.replace(location.pathname+'?v='+encodeURIComponent(m[1]));
+    }
+  }).catch(function(){});
+}
+if(curB && sessionStorage.getItem('pkb2')!==curB) buildCheck();
+setInterval(buildCheck, 60000);
+document.addEventListener('visibilitychange', function(){ if(!document.hidden) buildCheck(); });
+}catch(e){}
+try{
+if(window.self!==window.top){
+var st=document.createElement('style');
+st.textContent='button[onclick="logout()"]{display:none!important}';
+document.head.appendChild(st);
+}
+}catch(e){}
+</script>
+</body>
+</html>
